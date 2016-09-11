@@ -94,8 +94,28 @@ class Brain extends EventEmitter
   # Public: Get an Array of User objects stored in the brain.
   #
   # Returns an Array of User objects.
-  users: ->
+  users: () ->
     @data.users
+
+  # Public: Get a User object given a unique identifier.
+  #
+  # Returns a User instance of the specified user.
+  registerUser: (id, options) ->
+    user = @data.users[id]
+
+    if user
+      id = "#{id}-1"
+      user = null
+
+    unless user
+      user = new User id, options
+      @data.users[id] = user
+
+    if options and options.room and (!user.room or user.room isnt options.room)
+      user = new User id, options
+      @data.users[id] = user
+
+    user
 
   # Public: Get a User object given a unique identifier.
   #
